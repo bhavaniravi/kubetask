@@ -1,12 +1,12 @@
 import pytest
 import datetime
-from kubetask.core import Config, Task
+from kubetask.core.config import Config
+from kubetask.core.task import Task
 from kubetask.core.constants import State
 
 
 task_list = [
     {
-        "task_id": "task_001",
         "task_name": "new task",
         "docker_url": "docker_url",
         "command": [],
@@ -14,7 +14,6 @@ task_list = [
         "start_at": None,
     },
     {
-        "task_id": "task_002",
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
@@ -22,7 +21,6 @@ task_list = [
         "start_at": None,
     },
     {
-        "task_id": "task_002",
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
@@ -73,3 +71,4 @@ class TestTask:
         task = Task(**arguments)
         task_instance = task.start()
         assert task.state == state
+        assert task.task_id is not None
