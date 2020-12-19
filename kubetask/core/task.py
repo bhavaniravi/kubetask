@@ -1,9 +1,10 @@
 from .task_instance import TaskInstance
 from .constants import State
 from kubetask.models.model import TaskModel
+from kubetask.core.db import DB
 
 class Task:
-    def __init__(self, task_name, docker_url, command, schedule=None, start_at=None):
+    def __init__(self, task_name, docker_url, command, schedule=None, start_at=None, task_id=None):
         if schedule and start_at:
             raise TypeError("A scheduled task cannot be deferred")
 
@@ -14,8 +15,11 @@ class Task:
         self.schedule = schedule
         self.start_at = start_at
         self.state = State.NOT_STARTED
+         
 
-        self.task_id = TaskModel(**vars(self))
+        self.task_model_obj = DB.create_or_get(TaskModel, self.task_id, vars(self))
+
+        self.task_id = self.task_model_obj.task_id
 
     def _schedule(self):
         self.state = State.SCHEDULED
@@ -25,6 +29,10 @@ class Task:
 
     def _start_task(self):
         self.state = State.STARTED
+
+    def update_state(self):
+        self.task_model_obj.state = self.state
+        
 
 
     def start(self):
@@ -42,5 +50,6 @@ class Task:
             task_instance = self._defer() # create_a_cron_and_defer_execution
         else:
             task_instance = self._start_task()
-            
+
+        self.update_state()
         return TaskInstance()
