@@ -21,19 +21,22 @@ class Task:
 
         self.task_id = self.task_model_obj.task_id
 
-    def _schedule(self):
+    def schedule_task(self):
         self.state = State.SCHEDULED
 
-    def _defer(self):
+    def defer(self):
         self.state = State.DEFERRED
 
     def _start_task(self):
         self.state = State.STARTED
+        if self.schedule: 
+            self.schedule_task() # create_a_cron_and_defer_execution
+        elif self.start_at:
+            self.defer() # create_a_cron_and_defer_execution
 
     def update_state(self):
         self.task_model_obj.state = self.state
         
-
 
     def start(self):
         """
@@ -44,12 +47,9 @@ class Task:
 
         return task_instance       
         """
-        if self.schedule: 
-            task_instance = self._schedule() # create_a_cron_and_defer_execution
-        elif self.start_at:
-            task_instance = self._defer() # create_a_cron_and_defer_execution
-        else:
-            task_instance = self._start_task()
+
+
+        task_instance = self._start_task()
 
         self.update_state()
-        return TaskInstance()
+        return task_instance

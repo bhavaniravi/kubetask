@@ -53,7 +53,6 @@ class TestTask:
         ],
     )
     def test_task_init(self, arguments):
-        print(arguments)
         task = Task(**arguments)
         for key, value in arguments.items():
             assert getattr(task, key) == value
@@ -69,6 +68,6 @@ class TestTask:
     )
     def test_task_start(self, arguments, state):
         task = Task(**arguments)
-        task_instance = task.start()
+        task.start()
         assert task.state == state
         assert task.task_id is not None

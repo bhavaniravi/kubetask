@@ -3,4 +3,5 @@ from kubetask.core.constants import State
 
 class TestUtils:
     def test_get_obj_params(self):
-        print ("printing ",utils.get_object_params(State))
+        params = utils.get_object_params(State)
+        assert "NOT_STARTED" in params
