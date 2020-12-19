@@ -6,3 +6,4 @@ class State(enum.Enum):
     STARTED = "STARTED"
     SCHEDULED = "SCHEDULED"
     DEFERRED = "DEFERRED"
+    COMPLETED = "COMPLETED"
