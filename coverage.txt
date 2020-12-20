@@ -4,9 +4,110 @@ rootdir: /Users/bhavani/projects/kubetask
 plugins: cov-2.10.1
 collected 12 items
 
-tests/test_core.py ........                                              [ 66%]
+tests/test_core.py .....FFF                                              [ 66%]
 tests/test_model.py ...                                                  [ 91%]
 tests/test_utils.py .                                                    [100%]
+
+=================================== FAILURES ===================================
+______________ TestTask.test_task_start[arguments0-State.STARTED] ______________
+
+self = <test_core.TestTask object at 0x10a047c50>
+arguments = {'command': [], 'docker_url': 'docker_url', 'schedule': None, 'start_at': None, ...}
+state = <State.STARTED: 'STARTED'>
+
+    @pytest.mark.parametrize(
+        "arguments, state",
+        [
+            (task_list[0], State.STARTED),
+            (task_list[1], State.SCHEDULED),
+            (task_list[2], State.DEFERRED),
+        ],
+    )
+    def test_task_start(self, arguments, state):
+        task = Task(**arguments)
+>       task.start()
+
+tests/test_core.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kubetask/core/task.py:28: in caller
+    func(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <kubetask.core.task.Task object at 0x10a047950>
+
+    @update_state
+    def start(self):
+        self.state = State.STARTED
+>       task_instance = self._start_task()
+E       AttributeError: 'Task' object has no attribute '_start_task'
+
+kubetask/core/task.py:43: AttributeError
+_____________ TestTask.test_task_start[arguments1-State.SCHEDULED] _____________
+
+self = <test_core.TestTask object at 0x10a047e10>
+arguments = {'command': ['python', 'setup.py'], 'docker_url': 'docker_url 1', 'schedule': '@daily', 'start_at': None, ...}
+state = <State.SCHEDULED: 'SCHEDULED'>
+
+    @pytest.mark.parametrize(
+        "arguments, state",
+        [
+            (task_list[0], State.STARTED),
+            (task_list[1], State.SCHEDULED),
+            (task_list[2], State.DEFERRED),
+        ],
+    )
+    def test_task_start(self, arguments, state):
+        task = Task(**arguments)
+>       task.start()
+
+tests/test_core.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kubetask/core/task.py:28: in caller
+    func(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <kubetask.core.task.Task object at 0x10a106110>
+
+    @update_state
+    def start(self):
+        self.state = State.STARTED
+>       task_instance = self._start_task()
+E       AttributeError: 'Task' object has no attribute '_start_task'
+
+kubetask/core/task.py:43: AttributeError
+_____________ TestTask.test_task_start[arguments2-State.DEFERRED] ______________
+
+self = <test_core.TestTask object at 0x10a0d3f50>
+arguments = {'command': ['python', 'setup.py'], 'docker_url': 'docker_url 1', 'schedule': None, 'start_at': datetime.datetime(2020, 12, 20, 23, 14, 59, 426987), ...}
+state = <State.DEFERRED: 'DEFERRED'>
+
+    @pytest.mark.parametrize(
+        "arguments, state",
+        [
+            (task_list[0], State.STARTED),
+            (task_list[1], State.SCHEDULED),
+            (task_list[2], State.DEFERRED),
+        ],
+    )
+    def test_task_start(self, arguments, state):
+        task = Task(**arguments)
+>       task.start()
+
+tests/test_core.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+kubetask/core/task.py:28: in caller
+    func(self)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <kubetask.core.task.Task object at 0x10a0d3710>
+
+    @update_state
+    def start(self):
+        self.state = State.STARTED
+>       task_instance = self._start_task()
+E       AttributeError: 'Task' object has no attribute '_start_task'
+
+kubetask/core/task.py:43: AttributeError
 
 ---------- coverage: platform darwin, python 3.7.6-final-0 -----------
 Name                              Stmts   Miss  Cover
@@ -16,7 +117,7 @@ kubetask/core/__init__.py             0      0   100%
 kubetask/core/config.py              14      0   100%
 kubetask/core/constants.py           15      0   100%
 kubetask/core/db.py                  35      8    77%
-kubetask/core/task.py                36      0   100%
+kubetask/core/task.py                33      4    88%
 kubetask/core/task_instance.py        7      4    43%
 kubetask/exceptions/__init__.py       0      0   100%
 kubetask/models/__init__.py           1      0   100%
@@ -24,7 +125,10 @@ kubetask/models/model.py             18      1    94%
 kubetask/utils/__init__.py            0      0   100%
 kubetask/utils/utils.py               9      0   100%
 -----------------------------------------------------
-TOTAL                               135     13    90%
+TOTAL                               132     17    87%
 
-
-============================== 12 passed in 0.59s ==============================
+=========================== short test summary info ============================
+FAILED tests/test_core.py::TestTask::test_task_start[arguments0-State.STARTED]
+FAILED tests/test_core.py::TestTask::test_task_start[arguments1-State.SCHEDULED]
+FAILED tests/test_core.py::TestTask::test_task_start[arguments2-State.DEFERRED]
+========================= 3 failed, 9 passed in 0.76s ==========================

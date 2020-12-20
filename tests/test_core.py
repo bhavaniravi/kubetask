@@ -88,15 +88,15 @@ class TestTask:
         task.state = State.NOT_STARTED
 
     @pytest.mark.parametrize(
-        "arguments, state",
+        "arguments, func, state",
         [
-            (task_list[0], State.STARTED),
-            (task_list[1], State.SCHEDULED),
-            (task_list[2], State.DEFERRED),
+            (task_list[0], "start", State.STARTED),
+            (task_list[1], "schedule_task", State.SCHEDULED),
+            (task_list[2], "defer", State.DEFERRED),
         ],
     )
-    def test_task_start(self, arguments, state):
+    def test_task_start(self, arguments, func, state):
         task = Task(**arguments)
-        task.start()
+        getattr(Task, func)(task)
         assert task.state == state
         assert task.task_id is not None

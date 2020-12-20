@@ -23,35 +23,22 @@ class Task:
 
         self.task_id = self.task_model_obj.task_id
 
+    def update_state(func) : 
+        def caller(self) : 
+            func(self) 
+            self.task_model_obj.state = self.state
+        return caller 
+
+    @update_state
     def schedule_task(self):
         self.state = State.SCHEDULED
 
+    @update_state
     def defer(self):
         self.state = State.DEFERRED
-
-    def _start_task(self):
-        self.state = State.STARTED
-        if self.schedule: 
-            self.schedule_task() # create_a_cron_and_defer_execution
-        elif self.start_at:
-            self.defer() # create_a_cron_and_defer_execution
-
-    def update_state(self):
-        self.task_model_obj.state = self.state
         
-
+    @update_state
     def start(self):
-        """
-        starts the task and returns a task instance.
-        make_db_entry()
-
-        
-
-        return task_instance       
-        """
-
-
-        task_instance = self._start_task()
-
-        self.update_state()
+        self.state = State.STARTED
+        task_instance = TaskInstance(self)
         return task_instance
