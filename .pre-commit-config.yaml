@@ -1,0 +1,10 @@
+- repo: local
+  hooks:
+  - id: tests
+    name: tests
+    entry: pytest --cov=kubetask tests/ > coverage.txt && git add coverage.txt
+    language: system
+    types: [python]
+    pass_filenames: false
+
+
