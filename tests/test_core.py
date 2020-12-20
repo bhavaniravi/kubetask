@@ -27,22 +27,51 @@ task_list = [
         "schedule": None,
         "start_at": datetime.datetime.utcnow(),
     },
+    {
+        "task_name": "new task 1",
+        "docker_url": "docker_url 1",
+        "command": ["python", "setup.py"],
+        "schedule": None,
+        "priority": "HIGH",
+        "start_at": datetime.datetime.utcnow(),
+    },
+    
 ]
 
-
-class TestTask:
-    def test_init_type_error(self):
-        arguments = {
+error_tasks = [
+    {
             "task_id": "task_002",
             "task_name": "new task 1",
             "docker_url": "docker_url 1",
             "command": ["python", "setup.py"],
             "schedule": "@daily",
             "start_at": datetime.datetime.utcnow(),
-        }
+        },
+    {
+        "task_name": "new task 1",
+        "docker_url": "docker_url 1",
+        "command": ["python", "setup.py"],
+        "schedule": None,
+        "priority": "BLAH",
+        "start_at": datetime.datetime.utcnow(),
+    },
 
-        with pytest.raises(TypeError):
+]
+
+
+class TestTask:
+    @pytest.mark.parametrize(
+        "arguments, error", 
+        [
+            (error_tasks[0], TypeError),
+            (error_tasks[1], AttributeError),
+        ],
+    )
+    def test_init_type_error(self, arguments, error):
+        with pytest.raises(error):
             task = Task(**arguments)
+
+    
 
     @pytest.mark.parametrize(
         "arguments",
