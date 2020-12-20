@@ -3,7 +3,7 @@ from sqlalchemy.types import DateTime, ARRAY, Enum
 from sqlalchemy.ext.declarative import declarative_base
 
 
-from kubetask.core.constants import State
+from kubetask.core.constants import State, Priority
 from kubetask.utils import utils
 
 Base = declarative_base()
@@ -18,6 +18,7 @@ class TaskModel(Base):
     command = Column(ARRAY(String))
     start_at = Column(DateTime)
     state = Column(Enum(State))
+    priority = Column(Enum(Priority))
 
     def __repr__(self):
         return "<Task(task_id='%s', task_name='%s', schedule='%s')>" % (
