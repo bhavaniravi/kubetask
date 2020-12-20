@@ -13,7 +13,7 @@ class TaskModel(Base):
 
     task_id = Column(Integer, primary_key=True, autoincrement=True)
     task_name = Column(String)
-    schedule = Column(String)
+    schedule_at = Column(String)
     docker_url = Column(String)
     command = Column(ARRAY(String))
     start_at = Column(DateTime)
@@ -24,5 +24,5 @@ class TaskModel(Base):
         return "<Task(task_id='%s', task_name='%s', schedule='%s')>" % (
             self.task_id,
             self.task_name,
-            self.schedule,
+            self.schedule_at,
         )

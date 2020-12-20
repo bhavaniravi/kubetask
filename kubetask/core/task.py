@@ -4,15 +4,15 @@ from kubetask.models.model import TaskModel
 from kubetask.core.db import DB
 
 class Task:
-    def __init__(self, task_name, docker_url, command, schedule=None, start_at=None, priority=None, task_id=None):
-        if schedule and start_at:
+    def __init__(self, task_name, docker_url, command, schedule_at=None, start_at=None, priority=None, task_id=None):
+        if schedule_at and start_at:
             raise TypeError("A scheduled task cannot be deferred")
 
         self.task_id = None
         self.task_name = task_name
         self.docker_url = docker_url
         self.command = command
-        self.schedule = schedule
+        self.schedule_at = schedule_at
         self.start_at = start_at
         self.state = State.NOT_STARTED
         self.priority = priority or Priority.LOW.value
@@ -30,7 +30,7 @@ class Task:
         return caller 
 
     @update_state
-    def schedule_task(self):
+    def schedule(self):
         self.state = State.SCHEDULED
 
     @update_state
