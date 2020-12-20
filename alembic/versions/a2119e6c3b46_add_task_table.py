@@ -1,8 +1,8 @@
-"""add new task state
+"""add task table
 
-Revision ID: f2d273743b04
-Revises: c1bc280d2aaa
-Create Date: 2020-12-19 13:30:17.969173
+Revision ID: a2119e6c3b46
+Revises: 
+Create Date: 2020-12-20 17:01:27.242314
 
 """
 from alembic import op
@@ -11,8 +11,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f2d273743b04'
-down_revision = 'c1bc280d2aaa'
+revision = 'a2119e6c3b46'
+down_revision = None
 branch_labels = None
 depends_on = None
 
