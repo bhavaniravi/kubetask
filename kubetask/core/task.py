@@ -19,14 +19,14 @@ class Task:
 
         if self.priority not in Priority:
             raise AttributeError(f"Invalid value for priority {self.priority}")
-        self.task_model_obj = DB.create_or_get(TaskModel, self.task_id, vars(self))
+        self.model_obj = DB.create_or_get(TaskModel, self.task_id, vars(self))
 
-        self.task_id = self.task_model_obj.task_id
+        self.task_id = self.model_obj.task_id
 
     def update_state(func) : 
         def caller(self) : 
             func(self) 
-            self.task_model_obj.state = self.state
+            self.model_obj.state = self.state
         return caller 
 
     @update_state

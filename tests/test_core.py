@@ -2,6 +2,7 @@ import pytest
 import datetime
 from kubetask.core.config import Config
 from kubetask.core.task import Task
+from kubetask.core.task_instance import TaskInstance
 from kubetask.core.constants import State
 
 
@@ -97,3 +98,22 @@ class TestTask:
         getattr(Task, func)(task)
         assert task.state == state
         assert task.task_id is not None
+
+
+class TestTaskInstance:
+    def test_task_instance_obj(self):
+        task_args = {
+            "task_name": "new task",
+            "docker_url": "docker_url",
+            "command": [],
+            "start_at": None,
+        }
+        task = Task(**task_args)
+        ti = TaskInstance(task)
+        ti.start()
+        assert ti.state == State.STARTED
+        assert ti.model_obj is not None
+        assert ti.model_obj.state == State.STARTED
+
+        ti.complete()
+        assert ti.model_obj.state == State.COMPLETED
