@@ -27,7 +27,7 @@ List down all the tech used
 
     For now this is [what we have in mind](https://github.com/bhavaniravi/kubetask/discussions/2#discussion-72650), feel free to review and provide your feedback
 
-3. I know <x>. Can I contribute to this project?
+3. I know `x`. Can I contribute to this project?
 
     Sure. [Create an issue here](https://github.com/bhavaniravi/kubetask/issues/new?assignees=&labels=&template=i-want-to-help.md&title=)
 
