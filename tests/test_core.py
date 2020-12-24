@@ -1,8 +1,7 @@
 import pytest
 import datetime
 from kubetask.core.config import Config
-from kubetask.core.task import Task
-from kubetask.core.task_instance import TaskInstance
+from kubetask.core.task import Task, TaskInstance
 from kubetask.core.constants import State
 
 
@@ -117,3 +116,20 @@ class TestTaskInstance:
 
         ti.complete()
         assert ti.model_obj.state == State.COMPLETED
+    
+
+    def test_task_complete_before_start(self):
+        task_args = {
+            "task_name": "new task",
+            "docker_url": "docker_url",
+            "command": [],
+            "start_at": None,
+        }
+        task = Task(**task_args)
+        ti = TaskInstance(task)
+
+        with pytest.raises(Exception):
+            ti.complete()
+
+
+        
