@@ -130,6 +130,7 @@ class TestTaskInstance:
 
         with pytest.raises(Exception):
             ti.complete()
+            ti.stop()
 
 
         

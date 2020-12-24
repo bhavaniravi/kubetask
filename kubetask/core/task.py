@@ -36,12 +36,18 @@ class Task:
     @update_state
     def defer(self):
         self.state = State.DEFERRED
+
+    @update_state
+    def stop(self):
+        self.state = State.STOPPED
         
     @update_state
     def start(self):
         self.state = State.STARTED
         task_instance = TaskInstance(self)
         return task_instance
+
+    
 
 
 
@@ -54,28 +60,38 @@ class TaskInstance:
         self.end_ts = None
         self.model_obj = None
 
+    def check_start(func) : 
+        def caller(self) : 
+            if not self.model_obj:
+                raise Exception("Task instance not started yet")
+            func(self) 
+        return caller 
+
     def create_db_object(self):
         kwargs = vars(self).copy()
         kwargs["task"] = self.task.model_obj
         kwargs.pop("model_obj")
         self.model_obj = DB.create(TaskInstanceModel, kwargs)
 
-    @update_state
     def start(self):
         """starts the execution of the task
         1. push the task to the queue
         2. Update DB with task instance details
         """
         self.state = State.STARTED
-        self.create_db_object()       
-        
+        self.create_db_object()      
 
+
+    @check_start    
+    @update_state
+    def stop(self):
+        self.state = State.STOPPED
+
+    @check_start
     @update_state
     def complete(self):
         """Update DB that the task is complete
         """
-        if not self.model_obj:
-            raise Exception("Task instance not started yet")
         self.state = State.COMPLETED
 
     
