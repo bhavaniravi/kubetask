@@ -15,7 +15,6 @@ def reset_alembic():
     engine = create_engine(DB)
     with engine.connect() as conn:
         conn.execute("TRUNCATE TABLE alembic_version")
-
-
+        
 if __name__ == '__main__':
     reset_alembic()

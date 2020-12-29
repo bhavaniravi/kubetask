@@ -1,8 +1,10 @@
 import pytest
 import datetime
 from kubetask.core.config import Config
-from kubetask.core.task import Task, TaskInstance
+from kubetask.core.task import Task, TaskInstance, DBObject
 from kubetask.core.constants import State
+
+from kubetask.models.model import TaskModel, TaskInstanceModel
 
 
 task_list = [
@@ -96,7 +98,7 @@ class TestTask:
         task = Task(**arguments)
         getattr(Task, func)(task)
         assert task.state == state
-        assert task.task_id is not None
+        assert task.db_id is not None
 
 
 class TestTaskInstance:
@@ -115,6 +117,8 @@ class TestTaskInstance:
         assert ti.model_obj.state == State.STARTED
 
         ti.complete()
+        ti_model_obj = DBObject.get(TaskInstanceModel, ti.db_id)
+        assert ti_model_obj.state == State.COMPLETED
         assert ti.model_obj.state == State.COMPLETED
     
 
