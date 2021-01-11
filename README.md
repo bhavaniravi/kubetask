@@ -12,6 +12,7 @@ List down all the tech used
 1. Python
 2. Kubernetes
 3. Docker
+4. React JS
 
 
 ## FAQ
