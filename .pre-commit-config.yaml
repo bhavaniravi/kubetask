@@ -1,0 +1,11 @@
+repos:
+- repo: local
+  hooks:
+  - id: tests
+    name: tests
+    entry: pytest
+    language: system
+    types: [python]
+    pass_filenames: false
+
+
