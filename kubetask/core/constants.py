@@ -11,6 +11,7 @@ class State(enum.Enum, metaclass=BaseEnumMeta):
     SCHEDULED = "SCHEDULED"
     DEFERRED = "DEFERRED"
     COMPLETED = "COMPLETED"
+    STOPPED = 'STOPPED'
 
 
 class Priority(enum.Enum, metaclass=BaseEnumMeta):

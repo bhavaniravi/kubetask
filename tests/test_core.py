@@ -1,8 +1,10 @@
 import pytest
 import datetime
 from kubetask.core.config import Config
-from kubetask.core.task import Task
+from kubetask.core.task import Task, TaskInstance, DBObject
 from kubetask.core.constants import State
+
+from kubetask.models.model import TaskModel, TaskInstanceModel
 
 
 task_list = [
@@ -10,28 +12,26 @@ task_list = [
         "task_name": "new task",
         "docker_url": "docker_url",
         "command": [],
-        "schedule": None,
         "start_at": None,
     },
     {
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
-        "schedule": "@daily",
+        "schedule_at": "@daily",
         "start_at": None,
     },
     {
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
-        "schedule": None,
+
         "start_at": datetime.datetime.utcnow(),
     },
     {
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
-        "schedule": None,
         "priority": "HIGH",
         "start_at": datetime.datetime.utcnow(),
     },
@@ -44,14 +44,13 @@ error_tasks = [
             "task_name": "new task 1",
             "docker_url": "docker_url 1",
             "command": ["python", "setup.py"],
-            "schedule": "@daily",
+            "schedule_at": "@daily",
             "start_at": datetime.datetime.utcnow(),
         },
     {
         "task_name": "new task 1",
         "docker_url": "docker_url 1",
         "command": ["python", "setup.py"],
-        "schedule": None,
         "priority": "BLAH",
         "start_at": datetime.datetime.utcnow(),
     },
@@ -88,15 +87,54 @@ class TestTask:
         task.state = State.NOT_STARTED
 
     @pytest.mark.parametrize(
-        "arguments, state",
+        "arguments, func, state",
         [
-            (task_list[0], State.STARTED),
-            (task_list[1], State.SCHEDULED),
-            (task_list[2], State.DEFERRED),
+            (task_list[0], "start", State.STARTED),
+            (task_list[1], "schedule", State.SCHEDULED),
+            (task_list[2], "defer", State.DEFERRED),
         ],
     )
-    def test_task_start(self, arguments, state):
+    def test_task_start(self, arguments, func, state):
         task = Task(**arguments)
-        task.start()
+        getattr(Task, func)(task)
         assert task.state == state
-        assert task.task_id is not None
+        assert task.db_id is not None
+
+
+class TestTaskInstance:
+    def test_task_instance_obj(self):
+        task_args = {
+            "task_name": "new task",
+            "docker_url": "docker_url",
+            "command": [],
+            "start_at": None,
+        }
+        task = Task(**task_args)
+        ti = TaskInstance(task)
+        ti.start()
+        assert ti.state == State.STARTED
+        assert ti.model_obj is not None
+        assert ti.model_obj.state == State.STARTED
+
+        ti.complete()
+        ti_model_obj = DBObject.get(TaskInstanceModel, ti.db_id)
+        assert ti_model_obj.state == State.COMPLETED
+        assert ti.model_obj.state == State.COMPLETED
+    
+
+    def test_task_complete_before_start(self):
+        task_args = {
+            "task_name": "new task",
+            "docker_url": "docker_url",
+            "command": [],
+            "start_at": None,
+        }
+        task = Task(**task_args)
+        ti = TaskInstance(task)
+
+        with pytest.raises(Exception):
+            ti.complete()
+            ti.stop()
+
+
+        
