@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "kubetask"
+version = "0.1.0"
+description = "Kubernetes based task scheduler"
+authors = ["bhavaniravi <bhava0895@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^2.2.3"
+psycopg2-binary = "^2.9.5"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+sqlalchemy = "^2.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

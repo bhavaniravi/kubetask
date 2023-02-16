@@ -14,15 +14,18 @@ List down all the tech used
 3. Docker
 4. React JS
 
+## Why this project?
 
+- To learn Docker and kubernetes deeply
+- There are downsides to both celery and airflow, may be we can avoid those
+- Just for fun
 ## FAQ
 
-1. Who can Contribute?
+1. I want to contribute to the project. What are the pre-requisites?
 
-    - I know python well but want a advanced project building experience
-    - Want hands-on Docker experience
-    - Want hands-on Kubernetes
-    - Want hands-on experience on building a task executor
+- Using Python and it's associated libraries
+- Hands-on Docker experience
+- Hands-on Kubernetes
 
 2. How will it work?
 
@@ -32,13 +35,7 @@ List down all the tech used
 
     Sure. [Create an issue here](https://github.com/bhavaniravi/kubetask/issues/new?assignees=&labels=&template=i-want-to-help.md&title=)
 
-4. Why are you building this project?
-
-    - To learn Docker and kubernetes deeply
-    - There are downsides to both celery and airflow, may be we can avoid those
-    - Just for fun
-
-5. Can't find my question here?
+4. Can't find my question here?
 
     Use [the discussion forum](https://github.com/bhavaniravi/kubetask/discussions)
 
