@@ -13,9 +13,13 @@ class Config(BaseConfig):
     pass
 
 class UTConfig(BaseConfig):
-    KUBETASK_DB = "postgresql://postgres:123@localhost:5432/kubetask"
+    KUBETASK_DB = "postgresql://bhavaniravi:admin@localhost:5432/kubetask"
 
 
 def get_config():
     env = os.environ["ENV"]
+    
+    load_dotenv(f"{env}.env")
     return globals()[f"{env}Config"]
+
+config = get_config()
