@@ -2,9 +2,7 @@ import os
 import shutil
 
 from sqlalchemy import create_engine
-from kubetask.core.config import get_config
-
-kubetask_config = get_config()
+from kubetask.core.config import config as kubetask_config
 
 def reset_alembic():
     path = 'alembic/versions/'

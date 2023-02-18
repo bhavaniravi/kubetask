@@ -1,14 +1,13 @@
-from kubetask.core.config import get_config
+from kubetask.core.config import config as kubetask_config
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-
-Config = get_config()
-engine = create_engine(Config.KUBETASK_DB)
-Session = sessionmaker(bind=engine, expire_on_commit = False)
+engine = create_engine(kubetask_config.KUBETASK_DB)
+Session = sessionmaker(bind=engine, expire_on_commit=False)
 
 from contextlib import contextmanager
+
 
 @contextmanager
 def session_scope():
@@ -25,14 +24,15 @@ def session_scope():
         session.expunge_all()
         session.close()
 
+
 def for_all_methods(decorator):
     def decorate(cls):
-        for attr in cls.__dict__: # there's propably a better way to do this
+        for attr in cls.__dict__:  # there's propably a better way to do this
             if callable(getattr(cls, attr)):
                 setattr(cls, attr, decorator(getattr(cls, attr)))
         return cls
-    return decorate
 
+    return decorate
 
 
 class DB:
@@ -58,5 +58,3 @@ class DB:
     def update(self, ModelClass, filter_dict, update_dict):
         with session_scope() as session:
             rs = session.query(ModelClass).filter_by(**filter_dict).update(update_dict)
-
-

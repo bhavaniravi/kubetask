@@ -2,22 +2,31 @@
 from .constants import State, Priority
 from kubetask.models.model import TaskModel, TaskInstanceModel
 from kubetask.core.db import DB
-from sqlalchemy.inspection import inspect 
+from sqlalchemy.inspection import inspect
 
 DBObject = DB()
 
-def update_state(func) : 
-    def caller(self) : 
-        func(self) 
+
+def update_state(func):
+    def caller(self):
+        func(self)
         ModelClass = globals()[f"{self.__class__.__name__}Model"]
-        DBObject.update(ModelClass, {"id":self.db_id}, {"state": self.state})
-    return caller 
+        DBObject.update(ModelClass, {"id": self.db_id}, {"state": self.state})
 
-
+    return caller
 
 
 class Task:
-    def __init__(self, task_name, docker_url, command, schedule_at=None, start_at=None, priority=None, task_id=None):
+    def __init__(
+        self,
+        task_name,
+        docker_url,
+        command,
+        schedule_at=None,
+        start_at=None,
+        priority=None,
+        task_id=None,
+    ):
         if schedule_at and start_at:
             raise TypeError("A scheduled task cannot be deferred")
 
@@ -27,12 +36,7 @@ class Task:
         self.command = command
         self.schedule_at = schedule_at
         self.start_at = start_at
-        self.state = State.NOT_STARTED
-        self.priority = priority or Priority.LOW.value
 
-        if self.priority not in Priority:
-            raise AttributeError(f"Invalid value for priority {self.priority}")
-        
         args = vars(self).copy()
         args.pop("db_id")
         model_obj = DBObject.create_or_get(TaskModel, self.db_id, args)
@@ -41,30 +45,14 @@ class Task:
     def get_model_obj(self):
         return DBObject.get(TaskModel, self.db_id)
 
-    @update_state
-    def schedule(self):
-        self.state = State.SCHEDULED
-
-    @update_state
-    def defer(self):
-        self.state = State.DEFERRED
-
-    @update_state
-    def stop(self):
-        self.state = State.STOPPED
-        
-    @update_state
     def start(self):
-        self.state = State.STARTED
         task_instance = TaskInstance(self)
+        task_instance.start()
         return task_instance
 
     @property
     def model_obj(self):
         return DB.get(TaskModel, self.db_id)
-
-    
-
 
 
 class TaskInstance:
@@ -79,12 +67,13 @@ class TaskInstance:
     def model_obj(self):
         return DBObject.get(TaskInstanceModel, self.db_id)
 
-    def check_start(func) : 
-        def caller(self) : 
+    def check_start(func):
+        def caller(self):
             if not self.db_id:
                 raise Exception("Task instance not started yet")
-            func(self) 
-        return caller 
+            func(self)
+
+        return caller
 
     def create_db_object(self):
         kwargs = vars(self).copy()
@@ -99,10 +88,9 @@ class TaskInstance:
         2. Update DB with task instance details
         """
         self.state = State.STARTED
-        self.create_db_object()      
+        self.create_db_object()
 
-
-    @check_start    
+    @check_start
     @update_state
     def stop(self):
         self.state = State.STOPPED
@@ -110,10 +98,5 @@ class TaskInstance:
     @check_start
     @update_state
     def complete(self):
-        """Update DB that the task is complete
-        """
+        """Update DB that the task is complete"""
         self.state = State.COMPLETED
-
-    
-
-

@@ -6,9 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from kubetask.models.model import Base
-from kubetask.core.config import get_config
-
-kubetask_config = get_config()
+from kubetask.core.config import config as kubetask_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
