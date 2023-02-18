@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-test1
+spec:
+  template:
+    metadata:
+      name: job-test
+    spec:
+      containers:
+        - name: job
+          image: python:3.9
+          command: ["ech", "job-test"]
+      restartPolicy: OnFailure
