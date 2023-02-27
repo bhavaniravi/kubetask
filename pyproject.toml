@@ -15,6 +15,7 @@ python-dotenv = "^0.21.1"
 black = "^23.1.0"
 alembic = "^1.9.4"
 fastapi = {extras = ["all"], version = "^0.92.0"}
+python-multipart = "^0.0.6"
 
 
 [build-system]
