@@ -1,17 +1,17 @@
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey, String, create_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import MetaData
-
+from sqlalchemy import ForeignKey, String, create_engine, MetaData
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import Mapped, mapped_column, relationship, sessionmaker, DeclarativeBase
 from sqlalchemy.types import DateTime, ARRAY, Enum
+
 from kubetask.core.constants import State, Priority
 from kubetask.core.config import config as kubetask_config
 from kubetask.utils import utils
 
 
 engine = create_engine(kubetask_config.KUBETASK_DB)
+async_sessionmaker = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 
 class Base(DeclarativeBase):
@@ -22,9 +22,10 @@ class TaskModel(Base):
     __tablename__ = "task"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     task_name: Mapped[str] = mapped_column(String)
+    task_type: Mapped[str] = mapped_column(String, default="Job")
     schedule_at: Mapped[str] = mapped_column(String, nullable=True)
-    docker_url: Mapped[str] = mapped_column(String)
-    command: Mapped[str] = mapped_column(ARRAY(String), nullable=True)
+    # docker_url: Mapped[str] = mapped_column(String, nullable=True)
+    # command: Mapped[str] = mapped_column(ARRAY(String), nullable=True)
     start_at = mapped_column(DateTime)
     task_instances = relationship(
         "TaskInstanceModel", back_populates="task", passive_deletes=True

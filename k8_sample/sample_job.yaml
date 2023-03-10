@@ -10,5 +10,5 @@ spec:
       containers:
         - name: job
           image: python:3.9
-          command: ["ech", "job-test"]
+          command: ["echo", "job-test"]
       restartPolicy: OnFailure
